@@ -4,9 +4,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
@@ -27,8 +24,6 @@ public class FloatingActionsMenu extends ViewGroup {
     public static final int EXPAND_DOWN = 1;
 
     private static final int ANIMATION_DURATION = 300;
-    private static final float COLLAPSED_PLUS_ROTATION = 0f;
-    private static final float EXPANDED_PLUS_ROTATION = 90f + 45f;
 
     private int mAddButtonPlusColor;
     private int mAddButtonColorNormal;
@@ -43,9 +38,7 @@ public class FloatingActionsMenu extends ViewGroup {
     private AnimatorSet mExpandAnimation = new AnimatorSet().setDuration(ANIMATION_DURATION);
     private AnimatorSet mCollapseAnimation = new AnimatorSet().setDuration(ANIMATION_DURATION);
     private AddFloatingActionButton mAddButton;
-    private RotatingDrawable mRotatingDrawable;
     private int mMaxButtonWidth;
-    private int mMaxButtonHeight;
     private int mButtonsCount;
 
     private OnFloatingActionsMenuUpdateListener mListener;
@@ -92,7 +85,6 @@ public class FloatingActionsMenu extends ViewGroup {
         int height = 0;
 
         mMaxButtonWidth = 0;
-        mMaxButtonHeight = 0;
         int maxLabelWidth = 0;
 
         for (int i = 0; i < mButtonsCount; i++) {
@@ -189,9 +181,6 @@ public class FloatingActionsMenu extends ViewGroup {
             SavedState savedState = (SavedState) state;
             mExpanded = savedState.mExpanded;
 
-            if (mRotatingDrawable != null) {
-                mRotatingDrawable.setRotation(mExpanded ? EXPANDED_PLUS_ROTATION : COLLAPSED_PLUS_ROTATION);
-            }
             super.onRestoreInstanceState(savedState.getSuperState());
         } else {
             super.onRestoreInstanceState(state);
@@ -254,33 +243,6 @@ public class FloatingActionsMenu extends ViewGroup {
         return mExpanded;
     }
 
-    private static class RotatingDrawable extends LayerDrawable {
-        public RotatingDrawable(Drawable drawable) {
-            super(new Drawable[]{drawable});
-        }
-
-        private float mRotation;
-
-        @SuppressWarnings("UnusedDeclaration")
-        public float getRotation() {
-            return mRotation;
-        }
-
-        @SuppressWarnings("UnusedDeclaration")
-        public void setRotation(float rotation) {
-            mRotation = rotation;
-            invalidateSelf();
-        }
-
-        @Override
-        public void draw(Canvas canvas) {
-            canvas.save();
-            canvas.rotate(mRotation, getBounds().centerX(), getBounds().centerY());
-            super.draw(canvas);
-            canvas.restore();
-        }
-    }
-
     private void createAddButton(Context context) {
         mAddButton = new AddFloatingActionButton(context) {
             @Override
@@ -290,25 +252,6 @@ public class FloatingActionsMenu extends ViewGroup {
                 mColorPressed = mAddButtonColorPressed;
                 mStrokeVisible = mAddButtonStrokeVisible;
                 super.updateBackground();
-            }
-
-            @Override
-            protected Drawable getIconDrawable() {
-                final RotatingDrawable rotatingDrawable = new RotatingDrawable(super.getIconDrawable());
-                mRotatingDrawable = rotatingDrawable;
-
-                final OvershootInterpolator interpolator = new OvershootInterpolator();
-
-                final ObjectAnimator collapseAnimator = ObjectAnimator.ofFloat(rotatingDrawable, "rotation", EXPANDED_PLUS_ROTATION, COLLAPSED_PLUS_ROTATION);
-                final ObjectAnimator expandAnimator = ObjectAnimator.ofFloat(rotatingDrawable, "rotation", COLLAPSED_PLUS_ROTATION, EXPANDED_PLUS_ROTATION);
-
-                collapseAnimator.setInterpolator(interpolator);
-                expandAnimator.setInterpolator(interpolator);
-
-                mExpandAnimation.play(expandAnimator);
-                mCollapseAnimation.play(collapseAnimator);
-
-                return rotatingDrawable;
             }
         };
 
