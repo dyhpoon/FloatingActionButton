@@ -28,7 +28,6 @@ public class FloatingActionsMenu extends ViewGroup {
     private int mMenuButtonColorNormal;
     private int mMenuButtonColorPressed;
     private int mMenuButtonColorRipple;
-    private boolean mMenuButtonStrokeVisible;
     private int mExpandDirection;
 
     private int mButtonSpacing;
@@ -70,7 +69,6 @@ public class FloatingActionsMenu extends ViewGroup {
         mMenuButtonColorNormal = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorPressed, getColor(android.R.color.holo_blue_dark));
         mMenuButtonColorPressed = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorNormal, getColor(android.R.color.holo_blue_light));
         mMenuButtonColorRipple = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorRipple, getColor(android.R.color.holo_blue_bright));
-        mMenuButtonStrokeVisible = attr.getBoolean(R.styleable.FloatingActionsMenu_fab_menuButtonStrokeVisible, true);
         mExpandDirection = attr.getInt(R.styleable.FloatingActionsMenu_fab_expandDirection, EXPAND_UP);
         attr.recycle();
 
@@ -81,11 +79,8 @@ public class FloatingActionsMenu extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         measureChildren(widthMeasureSpec, heightMeasureSpec);
 
-        int width = 0;
         int height = 0;
-
         mMaxButtonWidth = 0;
-        int maxLabelWidth = 0;
 
         for (int i = 0; i < mButtonsCount; i++) {
             View child = getChildAt(i);
@@ -103,8 +98,6 @@ public class FloatingActionsMenu extends ViewGroup {
             }
         }
 
-        width = mMaxButtonWidth + (maxLabelWidth > 0 ? maxLabelWidth : 0);
-
         switch (mExpandDirection) {
             case EXPAND_UP:
             case EXPAND_DOWN:
@@ -112,7 +105,7 @@ public class FloatingActionsMenu extends ViewGroup {
                 break;
         }
 
-        setMeasuredDimension(width, height);
+        setMeasuredDimension(mMaxButtonWidth, height);
     }
 
     @Override
@@ -250,7 +243,6 @@ public class FloatingActionsMenu extends ViewGroup {
                 mColorNormal = mMenuButtonColorNormal;
                 mColorPressed = mMenuButtonColorPressed;
                 mColorRipple = mMenuButtonColorRipple;
-                mStrokeVisible = mMenuButtonStrokeVisible;
                 super.updateBackground();
             }
         };

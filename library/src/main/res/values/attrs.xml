@@ -16,7 +16,6 @@
         <attr name="fab_menuButtonColorPressed" format="color"/>
         <attr name="fab_menuButtonColorNormal" format="color"/>
         <attr name="fab_menuButtonColorRipple" format="color"/>
-        <attr name="fab_menuButtonStrokeVisible" format="boolean"/>
         <attr name="fab_expandDirection" format="enum">
             <enum name="up" value="0"/>
             <enum name="down" value="1"/>

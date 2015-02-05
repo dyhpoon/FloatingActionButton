@@ -29,9 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        fab:fab_addButtonColorNormal="@color/white"
-        fab:fab_addButtonColorPressed="@color/white_pressed"
-        fab:fab_addButtonPlusIconColor="@color/half_black" >
+        fab:fab_menuButtonColorNormal="@color/white"
+        fab:fab_menuButtonColorPressed="@color/white_pressed" >
 
         <com.dyhpoon.fab.FloatingActionButton
             android:id="@+id/action_a"

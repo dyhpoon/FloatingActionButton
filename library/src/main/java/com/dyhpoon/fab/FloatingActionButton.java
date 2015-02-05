@@ -6,7 +6,6 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Outline;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
@@ -51,16 +50,6 @@ public class FloatingActionButton extends ImageButton {
 
     protected int mColorNormal;
     protected int mColorPressed;
-    protected int mColorDisabled;
-    protected boolean mStrokeVisible;
-
-    private Drawable mIconDrawable;
-    private int mIcon;
-    private int mSize;
-    private float mCircleSize;
-    private int mDrawableSize;
-    private float mShadowRadius;
-
     protected int mColorRipple;
     private boolean mShadow;
     private int mType;
@@ -91,7 +80,7 @@ public class FloatingActionButton extends ImageButton {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int size = getDimension(
-            mType == TYPE_NORMAL ? R.dimen.fab_size_normal : R.dimen.fab_size_mini);
+                mType == TYPE_NORMAL ? R.dimen.fab_size_normal : R.dimen.fab_size_mini);
         if (mShadow && !hasLollipopApi()) {
             size += mShadowSize * 2;
             setMarginsWithoutShadow();
@@ -99,7 +88,7 @@ public class FloatingActionButton extends ImageButton {
         setMeasuredDimension(size, size);
     }
 
-    protected void init(Context context, AttributeSet attributeSet) {
+    private void init(Context context, AttributeSet attributeSet) {
         mVisible = true;
         mColorNormal = getColor(R.color.material_blue_500);
         mColorPressed = getColor(R.color.material_blue_600);
@@ -119,11 +108,11 @@ public class FloatingActionButton extends ImageButton {
         if (attr != null) {
             try {
                 mColorNormal = attr.getColor(R.styleable.FloatingActionButton_fab_colorNormal,
-                    getColor(R.color.material_blue_500));
+                        getColor(R.color.material_blue_500));
                 mColorPressed = attr.getColor(R.styleable.FloatingActionButton_fab_colorPressed,
-                    getColor(R.color.material_blue_600));
+                        getColor(R.color.material_blue_600));
                 mColorRipple = attr.getColor(R.styleable.FloatingActionButton_fab_colorRipple,
-                    getColor(android.R.color.white));
+                        getColor(android.R.color.white));
                 mShadow = attr.getBoolean(R.styleable.FloatingActionButton_fab_shadow, true);
                 mType = attr.getInt(R.styleable.FloatingActionButton_fab_type, TYPE_NORMAL);
             } finally {
@@ -146,7 +135,7 @@ public class FloatingActionButton extends ImageButton {
 
         if (mShadow && !hasLollipopApi()) {
             Drawable shadowDrawable = getResources().getDrawable(mType == TYPE_NORMAL ? R.drawable.shadow
-                : R.drawable.shadow_mini);
+                    : R.drawable.shadow_mini);
             LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{shadowDrawable, shapeDrawable});
             layerDrawable.setLayerInset(1, mShadowSize, mShadowSize, mShadowSize, mShadowSize);
             return layerDrawable;
@@ -159,21 +148,11 @@ public class FloatingActionButton extends ImageButton {
         return context.obtainStyledAttributes(attributeSet, attr, 0, 0);
     }
 
-    protected Drawable getIconDrawable() {
-        if (mIconDrawable != null) {
-            return mIconDrawable;
-        } else if (mIcon != 0) {
-            return getResources().getDrawable(mIcon);
-        } else {
-            return new ColorDrawable(Color.TRANSPARENT);
-        }
-    }
-
-    protected int getColor(@ColorRes int id) {
+    private int getColor(@ColorRes int id) {
         return getResources().getColor(id);
     }
 
-    protected int getDimension(@DimenRes int id) {
+    private int getDimension(@DimenRes int id) {
         return getResources().getDimensionPixelSize(id);
     }
 
@@ -200,13 +179,13 @@ public class FloatingActionButton extends ImageButton {
             float elevation;
             if (mShadow) {
                 elevation = getElevation() > 0.0f ? getElevation()
-                    : getDimension(R.dimen.fab_elevation_lollipop);
+                        : getDimension(R.dimen.fab_elevation_lollipop);
             } else {
                 elevation = 0.0f;
             }
             setElevation(elevation);
             RippleDrawable rippleDrawable = new RippleDrawable(new ColorStateList(new int[][]{{}},
-                new int[]{mColorRipple}), drawable, null);
+                    new int[]{mColorRipple}), drawable, null);
             setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
@@ -284,14 +263,6 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
-    private void updateCircleSize() {
-        mCircleSize = getDimension(R.dimen.fab_size_normal);
-    }
-
-    private void updateDrawableSize() {
-        mDrawableSize = (int) (mCircleSize + 2 * mShadowRadius);
-    }
-
     public boolean hasShadow() {
         return mShadow;
     }
@@ -352,8 +323,8 @@ public class FloatingActionButton extends ImageButton {
             int translationY = visible ? 0 : height + getMarginBottom();
             if (animate) {
                 ViewPropertyAnimator.animate(this).setInterpolator(mInterpolator)
-                    .setDuration(TRANSLATE_DURATION_MILLIS)
-                    .translationY(translationY);
+                        .setDuration(TRANSLATE_DURATION_MILLIS)
+                        .translationY(translationY);
             } else {
                 ViewHelper.setTranslationY(this, translationY);
             }
