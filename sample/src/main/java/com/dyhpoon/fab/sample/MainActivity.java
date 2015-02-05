@@ -13,7 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 
 import com.dyhpoon.fab.FloatingActionButton;
 import com.dyhpoon.fab.ObservableScrollView;
-import com.dyhpoon.fab.ScrollDirectionListener;
 
 public class MainActivity extends ActionBarActivity {
 

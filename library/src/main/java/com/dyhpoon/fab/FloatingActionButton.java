@@ -16,7 +16,6 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -276,15 +275,6 @@ public class FloatingActionButton extends ImageButton {
 
     public int getColorRipple() {
         return mColorRipple;
-    }
-
-    public void setSize(int size) {
-        if (mSize != size) {
-            mSize = size;
-            updateCircleSize();
-            updateDrawableSize();
-            updateBackground();
-        }
     }
 
     public void setShadow(boolean shadow) {

@@ -15,7 +15,7 @@ import android.util.AttributeSet;
  */
 public class AddFloatingActionButton extends FloatingActionButton {
 
-    int mPlusColor;
+    protected int mPlusColor;
 
     public AddFloatingActionButton(Context context) {
         this(context, null);
