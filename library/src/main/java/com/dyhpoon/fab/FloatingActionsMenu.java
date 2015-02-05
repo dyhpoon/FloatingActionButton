@@ -37,7 +37,7 @@ public class FloatingActionsMenu extends ViewGroup {
 
     private AnimatorSet mExpandAnimation = new AnimatorSet().setDuration(ANIMATION_DURATION);
     private AnimatorSet mCollapseAnimation = new AnimatorSet().setDuration(ANIMATION_DURATION);
-    private AddFloatingActionButton mAddButton;
+    private FloatingActionButton mMenuButton;
     private int mMaxButtonWidth;
     private int mButtonsCount;
 
@@ -122,20 +122,20 @@ public class FloatingActionsMenu extends ViewGroup {
             case EXPAND_DOWN:
                 boolean expandUp = mExpandDirection == EXPAND_UP;
 
-                int addButtonY = expandUp ? b - t - mAddButton.getMeasuredHeight() : 0;
-                // Ensure mAddButton is centered on the line where the buttons should be
+                int addButtonY = expandUp ? b - t - mMenuButton.getMeasuredHeight() : 0;
+                // Ensure mMenuButton is centered on the line where the buttons should be
                 int buttonsHorizontalCenter = r - l - mMaxButtonWidth / 2; // mMaxButtonWidth / 2??
-                int addButtonLeft = buttonsHorizontalCenter - mAddButton.getMeasuredWidth() / 2;
-                mAddButton.layout(addButtonLeft, addButtonY, addButtonLeft + mAddButton.getMeasuredWidth(), addButtonY + mAddButton.getMeasuredHeight());
+                int addButtonLeft = buttonsHorizontalCenter - mMenuButton.getMeasuredWidth() / 2;
+                mMenuButton.layout(addButtonLeft, addButtonY, addButtonLeft + mMenuButton.getMeasuredWidth(), addButtonY + mMenuButton.getMeasuredHeight());
 
                 int nextY = expandUp ?
                         addButtonY - mButtonSpacing :
-                        addButtonY + mAddButton.getMeasuredHeight() + mButtonSpacing;
+                        addButtonY + mMenuButton.getMeasuredHeight() + mButtonSpacing;
 
                 for (int i = mButtonsCount - 1; i >= 0; i--) {
                     final View child = getChildAt(i);
 
-                    if (child == mAddButton || child.getVisibility() == GONE) continue;
+                    if (child == mMenuButton || child.getVisibility() == GONE) continue;
 
                     int childX = buttonsHorizontalCenter - child.getMeasuredWidth() / 2;
                     int childY = expandUp ? nextY - child.getMeasuredHeight() : nextY;
@@ -163,7 +163,7 @@ public class FloatingActionsMenu extends ViewGroup {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        bringChildToFront(mAddButton);
+        bringChildToFront(mMenuButton);
         mButtonsCount = getChildCount();
     }
 
@@ -244,10 +244,9 @@ public class FloatingActionsMenu extends ViewGroup {
     }
 
     private void createAddButton(Context context) {
-        mAddButton = new AddFloatingActionButton(context) {
+        mMenuButton = new FloatingActionButton(context) {
             @Override
             protected void updateBackground() {
-                mPlusColor = mAddButtonPlusColor;
                 mColorNormal = mAddButtonColorNormal;
                 mColorPressed = mAddButtonColorPressed;
                 mStrokeVisible = mAddButtonStrokeVisible;
@@ -255,15 +254,14 @@ public class FloatingActionsMenu extends ViewGroup {
             }
         };
 
-        mAddButton.setId(R.id.fab_expand_menu_button);
-        mAddButton.setOnClickListener(new OnClickListener() {
+        mMenuButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggle();
             }
         });
 
-        addView(mAddButton, super.generateDefaultLayoutParams());
+        addView(mMenuButton, super.generateDefaultLayoutParams());
     }
 
     private int getColor(@ColorRes int id) {
