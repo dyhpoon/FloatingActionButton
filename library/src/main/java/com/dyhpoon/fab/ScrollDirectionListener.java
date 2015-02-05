@@ -1,4 +1,4 @@
-package com.melnykov.fab;
+package com.dyhpoon.fab;
 
 public interface ScrollDirectionListener {
     void onScrollDown();

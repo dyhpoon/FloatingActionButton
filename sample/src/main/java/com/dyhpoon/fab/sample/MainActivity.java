@@ -1,4 +1,4 @@
-package com.melnykov.fab.sample;
+package com.dyhpoon.fab.sample;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -23,9 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.melnykov.fab.FloatingActionButton;
-import com.melnykov.fab.ObservableScrollView;
-import com.melnykov.fab.ScrollDirectionListener;
+import com.dyhpoon.fab.FloatingActionButton;
+import com.dyhpoon.fab.ObservableScrollView;
+import com.dyhpoon.fab.ScrollDirectionListener;
 
 public class MainActivity extends ActionBarActivity {
 

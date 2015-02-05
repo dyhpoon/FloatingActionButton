@@ -1,4 +1,4 @@
-package com.melnykov.fab;
+package com.dyhpoon.fab;
 
 import android.support.annotation.NonNull;
 import android.view.View;

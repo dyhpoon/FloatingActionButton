@@ -12,7 +12,7 @@
         android:cacheColorHint="@android:color/transparent"
         android:scrollbars="vertical"/>
 
-    <com.melnykov.fab.FloatingActionButton
+    <com.dyhpoon.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

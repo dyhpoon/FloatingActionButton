@@ -1,4 +1,4 @@
-package com.melnykov.fab.sample;
+package com.dyhpoon.fab.sample;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
