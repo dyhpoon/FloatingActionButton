@@ -12,32 +12,21 @@
         android:cacheColorHint="@android:color/transparent"
         android:headerDividersEnabled="false"/>
 
-    <!--<com.dyhpoon.fab.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|right"-->
-        <!--android:layout_margin="16dp"-->
-        <!--android:src="@drawable/ic_add_white_24dp"-->
-        <!--fab:fab_colorNormal="@color/accent"-->
-        <!--fab:fab_colorPressed="@color/accent_pressed"-->
-        <!--fab:fab_colorRipple="@color/ripple"/>-->
-
     <com.dyhpoon.fab.FloatingActionsMenu
         android:id="@+id/multiple_actions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        fab:fab_menuButtonColorNormal="@color/white"
-        fab:fab_menuButtonColorPressed="@color/white_pressed" >
+        fab:fab_menuButtonColorNormal="@color/accent"
+        fab:fab_menuButtonColorPressed="@color/accent_pressed" >
 
         <com.dyhpoon.fab.FloatingActionButton
             android:id="@+id/action_a"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_colorPressed="@color/white_pressed"/>
+            fab:fab_colorNormal="@color/accent"
+            fab:fab_colorPressed="@color/accent_pressed"/>
 
     </com.dyhpoon.fab.FloatingActionsMenu>
 

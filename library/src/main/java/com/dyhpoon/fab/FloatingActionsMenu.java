@@ -94,6 +94,7 @@ public class FloatingActionsMenu extends ViewGroup {
                 case EXPAND_DOWN:
                     mMaxButtonWidth = Math.max(mMaxButtonWidth, child.getMeasuredWidth());
                     height += child.getMeasuredHeight();
+                    height = adjustForOvershoot(height);
                     break;
             }
         }
@@ -106,6 +107,10 @@ public class FloatingActionsMenu extends ViewGroup {
         }
 
         setMeasuredDimension(mMaxButtonWidth, height);
+    }
+
+    private int adjustForOvershoot(int dimension) {
+        return dimension * 12 / 10;
     }
 
     @Override
