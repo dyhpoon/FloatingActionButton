@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dyhpoon.fab.FloatingActionButton;
+import com.dyhpoon.fab.FloatingActionsMenu;
 import com.dyhpoon.fab.ObservableScrollView;
 
 public class MainActivity extends ActionBarActivity {
@@ -127,18 +128,8 @@ public class MainActivity extends ActionBarActivity {
                 getResources().getStringArray(R.array.countries));
             list.setAdapter(listAdapter);
 
-//            FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab);
-//            fab.attachToListView(list, new ScrollDirectionListener() {
-//                @Override
-//                public void onScrollDown() {
-//                    Log.d("ListViewFragment", "onScrollDown()");
-//                }
-//
-//                @Override
-//                public void onScrollUp() {
-//                    Log.d("ListViewFragment", "onScrollUp()");
-//                }
-//            });
+            FloatingActionsMenu menu = (FloatingActionsMenu) root.findViewById(R.id.floating_menu);
+            menu.attachToListView(list);
 
             return root;
         }

@@ -8,12 +8,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.AbsListView;
+
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 
 /**
  * Created by darrenpoon on 5/2/15.
@@ -23,23 +30,28 @@ public class FloatingActionsMenu extends ViewGroup {
     public static final int EXPAND_UP = 0;
     public static final int EXPAND_DOWN = 1;
 
-    private static final int ANIMATION_DURATION = 300;
+    private static final int ANIMATION_DURATION_TOGGLE = 300;
+    private static final int ANIMATION_DURATION_BOUNCE = 200;
 
     private int mMenuButtonColorNormal;
     private int mMenuButtonColorPressed;
     private int mMenuButtonColorRipple;
     private int mExpandDirection;
 
-    private int mButtonSpacing;
-
     private boolean mExpanded;
+    private boolean mVisible;
 
-    private AnimatorSet mExpandAnimation = new AnimatorSet().setDuration(ANIMATION_DURATION);
-    private AnimatorSet mCollapseAnimation = new AnimatorSet().setDuration(ANIMATION_DURATION);
+    private final Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
+    private final AnimatorSet mExpandAnimation = new AnimatorSet().setDuration(ANIMATION_DURATION_TOGGLE);
+    private final AnimatorSet mCollapseAnimation = new AnimatorSet().setDuration(ANIMATION_DURATION_TOGGLE);
+
     private FloatingActionButton mMenuButton;
+
+    private int mButtonSpacing;
     private int mMaxButtonWidth;
     private int mButtonsCount;
     private int mShadowOffset;
+    private int mScrollThreshold;
 
     private OnFloatingActionsMenuUpdateListener mListener;
 
@@ -64,6 +76,8 @@ public class FloatingActionsMenu extends ViewGroup {
     }
 
     private void init(Context context, AttributeSet attributeSet) {
+        mVisible = true;
+        mScrollThreshold = getResources().getDimensionPixelOffset(R.dimen.fab_scroll_threshold);
         mShadowOffset = getResources().getDimensionPixelSize(R.dimen.fab_shadow_offset);
         mButtonSpacing = (int) (getResources().getDimension(R.dimen.fab_actions_spacing)
                 - getResources().getDimension(R.dimen.fab_shadow_radius)
@@ -221,6 +235,10 @@ public class FloatingActionsMenu extends ViewGroup {
         }
     }
 
+    public boolean isExpanded() {
+        return mExpanded;
+    }
+
     public void toggle() {
         if (mExpanded) {
             collapse();
@@ -241,8 +259,65 @@ public class FloatingActionsMenu extends ViewGroup {
         }
     }
 
-    public boolean isExpanded() {
-        return mExpanded;
+    public boolean isVisible() {
+        return mVisible;
+    }
+
+    public void show() {
+        show(true);
+    }
+
+    public void hide() {
+        if (!mExpanded) hide(true);
+    }
+
+    public void show(boolean animate) {
+        bounce(true, animate, false);
+    }
+
+    public void hide(boolean animate) {
+        bounce(false, animate, false);
+    }
+
+    private void bounce(final boolean visible, final boolean animate, boolean force) {
+        if (mVisible != visible || force) {
+            mVisible = visible;
+            int height = getHeight();
+            if (height == 0 && !force) {
+                ViewTreeObserver vto = getViewTreeObserver();
+                if (vto.isAlive()) {
+                    vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            ViewTreeObserver currentVto = getViewTreeObserver();
+                            if (currentVto.isAlive()) {
+                                currentVto.removeOnPreDrawListener(this);
+                            }
+                            bounce(visible, animate, true);
+                            return true;
+                        }
+                    });
+                    return;
+                }
+            }
+            int translationY = visible ? 0 : height + getMarginBottom();
+            if (animate) {
+                ViewPropertyAnimator.animate(this).setInterpolator(mInterpolator)
+                        .setDuration(ANIMATION_DURATION_BOUNCE)
+                        .translationY(translationY);
+            } else {
+                ViewHelper.setTranslationY(this, translationY);
+            }
+        }
+    }
+
+    private int getMarginBottom() {
+        int marginBottom = 0;
+        final ViewGroup.LayoutParams layoutParams = getLayoutParams();
+        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+            marginBottom = ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin;
+        }
+        return marginBottom;
     }
 
     private void createMenuButton(Context context) {
@@ -348,4 +423,111 @@ public class FloatingActionsMenu extends ViewGroup {
             }
         };
     }
+
+    public void attachToListView(@NonNull AbsListView listView) {
+        attachToListView(listView, null);
+    }
+
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView) {
+        attachToRecyclerView(recyclerView, null);
+    }
+
+    public void attachToScrollView(@NonNull ObservableScrollView scrollView) {
+        attachToScrollView(scrollView, null);
+    }
+
+    public void attachToListView(@NonNull AbsListView listView, ScrollDirectionListener listener) {
+        AbsListViewScrollDetectorImpl scrollDetector = new AbsListViewScrollDetectorImpl();
+        scrollDetector.setListener(listener);
+        scrollDetector.setListView(listView);
+        scrollDetector.setScrollThreshold(mScrollThreshold);
+        listView.setOnScrollListener(scrollDetector);
+    }
+
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView, ScrollDirectionListener listener) {
+        RecyclerViewScrollDetectorImpl scrollDetector = new RecyclerViewScrollDetectorImpl();
+        scrollDetector.setListener(listener);
+        scrollDetector.setScrollThreshold(mScrollThreshold);
+        recyclerView.setOnScrollListener(scrollDetector);
+    }
+
+    public void attachToScrollView(@NonNull ObservableScrollView scrollView, ScrollDirectionListener listener) {
+        ScrollViewScrollDetectorImpl scrollDetector = new ScrollViewScrollDetectorImpl();
+        scrollDetector.setListener(listener);
+        scrollDetector.setScrollThreshold(mScrollThreshold);
+        scrollView.setOnScrollChangedListener(scrollDetector);
+    }
+
+    private class AbsListViewScrollDetectorImpl extends AbsListViewScrollDetector {
+        private ScrollDirectionListener mListener;
+
+        private void setListener(ScrollDirectionListener scrollDirectionListener) {
+            mListener = scrollDirectionListener;
+        }
+
+        @Override
+        public void onScrollDown() {
+            show();
+            if (mListener != null) {
+                mListener.onScrollDown();
+            }
+        }
+
+        @Override
+        public void onScrollUp() {
+            hide();
+            if (mListener != null) {
+                mListener.onScrollUp();
+            }
+        }
+    }
+
+    private class RecyclerViewScrollDetectorImpl extends RecyclerViewScrollDetector {
+        private ScrollDirectionListener mListener;
+
+        private void setListener(ScrollDirectionListener scrollDirectionListener) {
+            mListener = scrollDirectionListener;
+        }
+
+        @Override
+        public void onScrollDown() {
+            show();
+            if (mListener != null) {
+                mListener.onScrollDown();
+            }
+        }
+
+        @Override
+        public void onScrollUp() {
+            hide();
+            if (mListener != null) {
+                mListener.onScrollUp();
+            }
+        }
+    }
+
+    private class ScrollViewScrollDetectorImpl extends ScrollViewScrollDetector {
+        private ScrollDirectionListener mListener;
+
+        private void setListener(ScrollDirectionListener scrollDirectionListener) {
+            mListener = scrollDirectionListener;
+        }
+
+        @Override
+        public void onScrollDown() {
+            show();
+            if (mListener != null) {
+                mListener.onScrollDown();
+            }
+        }
+
+        @Override
+        public void onScrollUp() {
+            hide();
+            if (mListener != null) {
+                mListener.onScrollUp();
+            }
+        }
+    }
+
 }
