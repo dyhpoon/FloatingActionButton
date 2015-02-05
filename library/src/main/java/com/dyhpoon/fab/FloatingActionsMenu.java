@@ -95,14 +95,9 @@ public class FloatingActionsMenu extends ViewGroup {
                 continue;
             }
 
-            switch (mExpandDirection) {
-                case EXPAND_UP:
-                case EXPAND_DOWN:
-                    mMaxButtonWidth = Math.max(mMaxButtonWidth, child.getMeasuredWidth());
-                    height += child.getMeasuredHeight();
-                    height = adjustForOvershoot(height);
-                    break;
-            }
+            mMaxButtonWidth = Math.max(mMaxButtonWidth, child.getMeasuredWidth());
+            height += child.getMeasuredHeight();
+            height = adjustForOvershoot(height);
         }
 
         height += mButtonSpacing * (getChildCount() - 1);
@@ -117,55 +112,54 @@ public class FloatingActionsMenu extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        switch (mExpandDirection) {
-            case EXPAND_UP:
-            case EXPAND_DOWN:
-                boolean expandUp = mExpandDirection == EXPAND_UP;
+        boolean expandUp = mExpandDirection == EXPAND_UP;
 
-                int menuButtonY = expandUp ? b - t - mMenuButton.getMeasuredHeight() : 0;
-                // Ensure mMenuButton is centered on the line where the buttons should be
-                int buttonsHorizontalCenter = r - l - mMaxButtonWidth / 2; // mMaxButtonWidth / 2??
-                int menuButtonLeft = buttonsHorizontalCenter - mMenuButton.getMeasuredWidth() / 2;
-                mMenuButton.layout(
-                        menuButtonLeft - mShadowOffset,
-                        menuButtonY - mShadowOffset,
-                        menuButtonLeft + mMenuButton.getMeasuredWidth() - mShadowOffset,
-                        menuButtonY + mMenuButton.getMeasuredHeight() - mShadowOffset);
+        final int adjustShadowOffsetX = -mShadowOffset;
+        final int adjustShadowOffsetY = (expandUp) ? -mShadowOffset : mShadowOffset;
 
-                int nextY = expandUp ?
-                        menuButtonY - mButtonSpacing :
-                        menuButtonY + mMenuButton.getMeasuredHeight() + mButtonSpacing;
+        int menuButtonY = expandUp ? b - t - mMenuButton.getMeasuredHeight() : 0;
+        // Ensure mMenuButton is centered on the line where the buttons should be
+        int buttonsHorizontalCenter = r - l - mMaxButtonWidth / 2; // mMaxButtonWidth / 2??
+        int menuButtonLeft = buttonsHorizontalCenter - mMenuButton.getMeasuredWidth() / 2;
+        mMenuButton.layout(
+                menuButtonLeft + adjustShadowOffsetX,
+                menuButtonY + adjustShadowOffsetY,
+                menuButtonLeft + mMenuButton.getMeasuredWidth() + adjustShadowOffsetX,
+                menuButtonY + mMenuButton.getMeasuredHeight() + adjustShadowOffsetY);
 
-                for (int i = mButtonsCount - 1; i >= 0; i--) {
-                    final View child = getChildAt(i);
+        int nextY = expandUp ?
+                menuButtonY - mButtonSpacing :
+                menuButtonY + mMenuButton.getMeasuredHeight() + mButtonSpacing;
 
-                    if (child == mMenuButton || child.getVisibility() == GONE) continue;
+        for (int i = mButtonsCount - 1; i >= 0; i--) {
+            final View child = getChildAt(i);
 
-                    int childX = buttonsHorizontalCenter - child.getMeasuredWidth() / 2;
-                    int childY = expandUp ? nextY - child.getMeasuredHeight() : nextY;
-                    child.layout(
-                            childX - mShadowOffset,
-                            childY - mShadowOffset,
-                            childX + child.getMeasuredWidth() - mShadowOffset,
-                            childY + child.getMeasuredHeight() - mShadowOffset);
+            if (child == mMenuButton || child.getVisibility() == GONE) continue;
 
-                    float collapsedTranslation = menuButtonY - childY;
-                    float expandedTranslation = 0f;
+            int childX = buttonsHorizontalCenter - child.getMeasuredWidth() / 2;
+            int childY = expandUp ? nextY - child.getMeasuredHeight() : nextY;
+            child.layout(
+                    childX + adjustShadowOffsetX,
+                    childY + adjustShadowOffsetY,
+                    childX + child.getMeasuredWidth() + adjustShadowOffsetX,
+                    childY + child.getMeasuredHeight() + adjustShadowOffsetY);
 
-                    child.setTranslationY(mExpanded ? expandedTranslation : collapsedTranslation);
-                    child.setAlpha(mExpanded ? 1f : 0f);
+            float collapsedTranslation = menuButtonY - childY;
+            float expandedTranslation = 0f;
 
-                    LayoutParams params = (LayoutParams) child.getLayoutParams();
-                    params.mCollapseDir.setFloatValues(expandedTranslation, collapsedTranslation);
-                    params.mExpandDir.setFloatValues(collapsedTranslation, expandedTranslation);
-                    params.setAnimationsTarget(child);
+            child.setTranslationY(mExpanded ? expandedTranslation : collapsedTranslation);
+            child.setAlpha(mExpanded ? 1f : 0f);
 
-                    nextY = expandUp ?
-                            childY - mButtonSpacing :
-                            childY + child.getMeasuredHeight() + mButtonSpacing;
-                }
-                break;
+            LayoutParams params = (LayoutParams) child.getLayoutParams();
+            params.mCollapseDir.setFloatValues(expandedTranslation, collapsedTranslation);
+            params.mExpandDir.setFloatValues(collapsedTranslation, expandedTranslation);
+            params.setAnimationsTarget(child);
+
+            nextY = expandUp ?
+                    childY - mButtonSpacing :
+                    childY + child.getMeasuredHeight() + mButtonSpacing;
         }
+
     }
 
     @Override
@@ -302,13 +296,8 @@ public class FloatingActionsMenu extends ViewGroup {
             mExpandAlpha.setProperty(View.ALPHA);
             mExpandAlpha.setFloatValues(0f, 1f);
 
-            switch (mExpandDirection) {
-                case EXPAND_UP:
-                case EXPAND_DOWN:
-                    mCollapseDir.setProperty(View.TRANSLATION_Y);
-                    mExpandDir.setProperty(View.TRANSLATION_Y);
-                    break;
-            }
+            mCollapseDir.setProperty(View.TRANSLATION_Y);
+            mExpandDir.setProperty(View.TRANSLATION_Y);
         }
 
         public void setAnimationsTarget(View view) {

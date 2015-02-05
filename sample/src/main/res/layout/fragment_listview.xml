@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         fab:fab_menuButtonColorNormal="@color/accent"
-        fab:fab_menuButtonColorPressed="@color/accent_pressed" >
+        fab:fab_menuButtonColorPressed="@color/accent_pressed"
+        fab:fab_expandDirection="up">
 
         <com.dyhpoon.fab.FloatingActionButton
             android:id="@+id/action_a"
