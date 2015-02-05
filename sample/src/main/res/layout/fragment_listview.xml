@@ -17,7 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
         fab:fab_menuButtonColorNormal="@color/accent"
         fab:fab_menuButtonColorPressed="@color/accent_pressed" >
 

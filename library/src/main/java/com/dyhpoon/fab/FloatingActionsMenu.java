@@ -39,6 +39,7 @@ public class FloatingActionsMenu extends ViewGroup {
     private FloatingActionButton mMenuButton;
     private int mMaxButtonWidth;
     private int mButtonsCount;
+    private int mShadowOffset;
 
     private OnFloatingActionsMenuUpdateListener mListener;
 
@@ -63,7 +64,11 @@ public class FloatingActionsMenu extends ViewGroup {
     }
 
     private void init(Context context, AttributeSet attributeSet) {
-        mButtonSpacing = (int) (getResources().getDimension(R.dimen.fab_actions_spacing) - getResources().getDimension(R.dimen.fab_shadow_radius) - getResources().getDimension(R.dimen.fab_shadow_offset));
+        mShadowOffset = getResources().getDimensionPixelSize(R.dimen.fab_shadow_offset);
+        mButtonSpacing = (int) (getResources().getDimension(R.dimen.fab_actions_spacing)
+                - getResources().getDimension(R.dimen.fab_shadow_radius)
+                - getResources().getDimension(R.dimen.fab_shadow_offset))
+                + mShadowOffset;
 
         TypedArray attr = context.obtainStyledAttributes(attributeSet, R.styleable.FloatingActionsMenu, 0, 0);
         mMenuButtonColorNormal = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorPressed, getColor(android.R.color.holo_blue_dark));
@@ -79,6 +84,7 @@ public class FloatingActionsMenu extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         measureChildren(widthMeasureSpec, heightMeasureSpec);
 
+        int width = 0;
         int height = 0;
         mMaxButtonWidth = 0;
 
@@ -99,14 +105,10 @@ public class FloatingActionsMenu extends ViewGroup {
             }
         }
 
-        switch (mExpandDirection) {
-            case EXPAND_UP:
-            case EXPAND_DOWN:
-                height += mButtonSpacing * (getChildCount() - 1);
-                break;
-        }
+        height += mButtonSpacing * (getChildCount() - 1);
+        width += mMaxButtonWidth + (mShadowOffset * 2);
 
-        setMeasuredDimension(mMaxButtonWidth, height);
+        setMeasuredDimension(width, height);
     }
 
     private int adjustForOvershoot(int dimension) {
@@ -124,7 +126,11 @@ public class FloatingActionsMenu extends ViewGroup {
                 // Ensure mMenuButton is centered on the line where the buttons should be
                 int buttonsHorizontalCenter = r - l - mMaxButtonWidth / 2; // mMaxButtonWidth / 2??
                 int menuButtonLeft = buttonsHorizontalCenter - mMenuButton.getMeasuredWidth() / 2;
-                mMenuButton.layout(menuButtonLeft, menuButtonY, menuButtonLeft + mMenuButton.getMeasuredWidth(), menuButtonY + mMenuButton.getMeasuredHeight());
+                mMenuButton.layout(
+                        menuButtonLeft - mShadowOffset,
+                        menuButtonY - mShadowOffset,
+                        menuButtonLeft + mMenuButton.getMeasuredWidth() - mShadowOffset,
+                        menuButtonY + mMenuButton.getMeasuredHeight() - mShadowOffset);
 
                 int nextY = expandUp ?
                         menuButtonY - mButtonSpacing :
@@ -137,7 +143,11 @@ public class FloatingActionsMenu extends ViewGroup {
 
                     int childX = buttonsHorizontalCenter - child.getMeasuredWidth() / 2;
                     int childY = expandUp ? nextY - child.getMeasuredHeight() : nextY;
-                    child.layout(childX, childY, childX + child.getMeasuredWidth(), childY + child.getMeasuredHeight());
+                    child.layout(
+                            childX - mShadowOffset,
+                            childY - mShadowOffset,
+                            childX + child.getMeasuredWidth() - mShadowOffset,
+                            childY + child.getMeasuredHeight() - mShadowOffset);
 
                     float collapsedTranslation = menuButtonY - childY;
                     float expandedTranslation = 0f;
