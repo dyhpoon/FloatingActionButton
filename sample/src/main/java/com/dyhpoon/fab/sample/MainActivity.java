@@ -129,18 +129,18 @@ public class MainActivity extends ActionBarActivity {
                 getResources().getStringArray(R.array.countries));
             list.setAdapter(listAdapter);
 
-            FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab);
-            fab.attachToListView(list, new ScrollDirectionListener() {
-                @Override
-                public void onScrollDown() {
-                    Log.d("ListViewFragment", "onScrollDown()");
-                }
-
-                @Override
-                public void onScrollUp() {
-                    Log.d("ListViewFragment", "onScrollUp()");
-                }
-            });
+//            FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab);
+//            fab.attachToListView(list, new ScrollDirectionListener() {
+//                @Override
+//                public void onScrollDown() {
+//                    Log.d("ListViewFragment", "onScrollDown()");
+//                }
+//
+//                @Override
+//                public void onScrollUp() {
+//                    Log.d("ListViewFragment", "onScrollUp()");
+//                }
+//            });
 
             return root;
         }

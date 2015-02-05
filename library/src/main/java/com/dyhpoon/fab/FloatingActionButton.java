@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Outline;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
@@ -14,6 +16,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -47,8 +50,18 @@ public class FloatingActionButton extends ImageButton {
 
     private boolean mVisible;
 
-    private int mColorNormal;
-    private int mColorPressed;
+    protected int mColorNormal;
+    protected int mColorPressed;
+    protected int mColorDisabled;
+    protected boolean mStrokeVisible;
+
+    private Drawable mIconDrawable;
+    private int mIcon;
+    private int mSize;
+    private float mCircleSize;
+    private int mDrawableSize;
+    private float mShadowRadius;
+
     private int mColorRipple;
     private boolean mShadow;
     private int mType;
@@ -87,7 +100,7 @@ public class FloatingActionButton extends ImageButton {
         setMeasuredDimension(size, size);
     }
 
-    private void init(Context context, AttributeSet attributeSet) {
+    protected void init(Context context, AttributeSet attributeSet) {
         mVisible = true;
         mColorNormal = getColor(R.color.material_blue_500);
         mColorPressed = getColor(R.color.material_blue_600);
@@ -120,7 +133,7 @@ public class FloatingActionButton extends ImageButton {
         }
     }
 
-    private void updateBackground() {
+    protected void updateBackground() {
         StateListDrawable drawable = new StateListDrawable();
         drawable.addState(new int[]{android.R.attr.state_pressed}, createDrawable(mColorPressed));
         drawable.addState(new int[]{}, createDrawable(mColorNormal));
@@ -147,11 +160,21 @@ public class FloatingActionButton extends ImageButton {
         return context.obtainStyledAttributes(attributeSet, attr, 0, 0);
     }
 
-    private int getColor(@ColorRes int id) {
+    protected Drawable getIconDrawable() {
+        if (mIconDrawable != null) {
+            return mIconDrawable;
+        } else if (mIcon != 0) {
+            return getResources().getDrawable(mIcon);
+        } else {
+            return new ColorDrawable(Color.TRANSPARENT);
+        }
+    }
+
+    protected int getColor(@ColorRes int id) {
         return getResources().getColor(id);
     }
 
-    private int getDimension(@DimenRes int id) {
+    protected int getDimension(@DimenRes int id) {
         return getResources().getDimensionPixelSize(id);
     }
 
@@ -255,11 +278,28 @@ public class FloatingActionButton extends ImageButton {
         return mColorRipple;
     }
 
+    public void setSize(int size) {
+        if (mSize != size) {
+            mSize = size;
+            updateCircleSize();
+            updateDrawableSize();
+            updateBackground();
+        }
+    }
+
     public void setShadow(boolean shadow) {
         if (shadow != mShadow) {
             mShadow = shadow;
             updateBackground();
         }
+    }
+
+    private void updateCircleSize() {
+        mCircleSize = getDimension(R.dimen.fab_size_normal);
+    }
+
+    private void updateDrawableSize() {
+        mDrawableSize = (int) (mCircleSize + 2 * mShadowRadius);
     }
 
     public boolean hasShadow() {
