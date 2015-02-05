@@ -25,10 +25,10 @@ public class FloatingActionsMenu extends ViewGroup {
 
     private static final int ANIMATION_DURATION = 300;
 
-    private int mAddButtonPlusColor;
-    private int mAddButtonColorNormal;
-    private int mAddButtonColorPressed;
-    private boolean mAddButtonStrokeVisible;
+    private int mMenuButtonColorNormal;
+    private int mMenuButtonColorPressed;
+    private int mMenuButtonColorRipple;
+    private boolean mMenuButtonStrokeVisible;
     private int mExpandDirection;
 
     private int mButtonSpacing;
@@ -67,14 +67,14 @@ public class FloatingActionsMenu extends ViewGroup {
         mButtonSpacing = (int) (getResources().getDimension(R.dimen.fab_actions_spacing) - getResources().getDimension(R.dimen.fab_shadow_radius) - getResources().getDimension(R.dimen.fab_shadow_offset));
 
         TypedArray attr = context.obtainStyledAttributes(attributeSet, R.styleable.FloatingActionsMenu, 0, 0);
-        mAddButtonPlusColor = attr.getColor(R.styleable.FloatingActionsMenu_fab_addButtonPlusIconColor, getColor(android.R.color.white));
-        mAddButtonColorNormal = attr.getColor(R.styleable.FloatingActionsMenu_fab_addButtonColorNormal, getColor(android.R.color.holo_blue_dark));
-        mAddButtonColorPressed = attr.getColor(R.styleable.FloatingActionsMenu_fab_addButtonColorPressed, getColor(android.R.color.holo_blue_light));
-        mAddButtonStrokeVisible = attr.getBoolean(R.styleable.FloatingActionsMenu_fab_addButtonStrokeVisible, true);
+        mMenuButtonColorNormal = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorPressed, getColor(android.R.color.holo_blue_dark));
+        mMenuButtonColorPressed = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorNormal, getColor(android.R.color.holo_blue_light));
+        mMenuButtonColorRipple = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorRipple, getColor(android.R.color.holo_blue_bright));
+        mMenuButtonStrokeVisible = attr.getBoolean(R.styleable.FloatingActionsMenu_fab_menuButtonStrokeVisible, true);
         mExpandDirection = attr.getInt(R.styleable.FloatingActionsMenu_fab_expandDirection, EXPAND_UP);
         attr.recycle();
 
-        createAddButton(context);
+        createMenuButton(context);
     }
 
     @Override
@@ -122,15 +122,15 @@ public class FloatingActionsMenu extends ViewGroup {
             case EXPAND_DOWN:
                 boolean expandUp = mExpandDirection == EXPAND_UP;
 
-                int addButtonY = expandUp ? b - t - mMenuButton.getMeasuredHeight() : 0;
+                int menuButtonY = expandUp ? b - t - mMenuButton.getMeasuredHeight() : 0;
                 // Ensure mMenuButton is centered on the line where the buttons should be
                 int buttonsHorizontalCenter = r - l - mMaxButtonWidth / 2; // mMaxButtonWidth / 2??
-                int addButtonLeft = buttonsHorizontalCenter - mMenuButton.getMeasuredWidth() / 2;
-                mMenuButton.layout(addButtonLeft, addButtonY, addButtonLeft + mMenuButton.getMeasuredWidth(), addButtonY + mMenuButton.getMeasuredHeight());
+                int menuButtonLeft = buttonsHorizontalCenter - mMenuButton.getMeasuredWidth() / 2;
+                mMenuButton.layout(menuButtonLeft, menuButtonY, menuButtonLeft + mMenuButton.getMeasuredWidth(), menuButtonY + mMenuButton.getMeasuredHeight());
 
                 int nextY = expandUp ?
-                        addButtonY - mButtonSpacing :
-                        addButtonY + mMenuButton.getMeasuredHeight() + mButtonSpacing;
+                        menuButtonY - mButtonSpacing :
+                        menuButtonY + mMenuButton.getMeasuredHeight() + mButtonSpacing;
 
                 for (int i = mButtonsCount - 1; i >= 0; i--) {
                     final View child = getChildAt(i);
@@ -141,7 +141,7 @@ public class FloatingActionsMenu extends ViewGroup {
                     int childY = expandUp ? nextY - child.getMeasuredHeight() : nextY;
                     child.layout(childX, childY, childX + child.getMeasuredWidth(), childY + child.getMeasuredHeight());
 
-                    float collapsedTranslation = addButtonY - childY;
+                    float collapsedTranslation = menuButtonY - childY;
                     float expandedTranslation = 0f;
 
                     child.setTranslationY(mExpanded ? expandedTranslation : collapsedTranslation);
@@ -243,13 +243,14 @@ public class FloatingActionsMenu extends ViewGroup {
         return mExpanded;
     }
 
-    private void createAddButton(Context context) {
+    private void createMenuButton(Context context) {
         mMenuButton = new FloatingActionButton(context) {
             @Override
             protected void updateBackground() {
-                mColorNormal = mAddButtonColorNormal;
-                mColorPressed = mAddButtonColorPressed;
-                mStrokeVisible = mAddButtonStrokeVisible;
+                mColorNormal = mMenuButtonColorNormal;
+                mColorPressed = mMenuButtonColorPressed;
+                mColorRipple = mMenuButtonColorRipple;
+                mStrokeVisible = mMenuButtonStrokeVisible;
                 super.updateBackground();
             }
         };

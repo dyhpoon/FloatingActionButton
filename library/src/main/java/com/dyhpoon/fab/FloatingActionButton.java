@@ -61,7 +61,7 @@ public class FloatingActionButton extends ImageButton {
     private int mDrawableSize;
     private float mShadowRadius;
 
-    private int mColorRipple;
+    protected int mColorRipple;
     private boolean mShadow;
     private int mType;
 
