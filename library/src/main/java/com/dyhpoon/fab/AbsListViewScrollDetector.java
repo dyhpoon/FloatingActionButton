@@ -9,6 +9,11 @@ abstract class AbsListViewScrollDetector implements AbsListView.OnScrollListener
     private int mPreviousFirstVisibleItem;
     private AbsListView mListView;
     private int mScrollThreshold;
+    private AbsListView.OnScrollListener mListViewScrollListener;
+
+    public AbsListViewScrollDetector(AbsListView.OnScrollListener l) {
+        mListViewScrollListener = l;
+    }
 
     abstract void onScrollUp();
 
@@ -16,6 +21,8 @@ abstract class AbsListViewScrollDetector implements AbsListView.OnScrollListener
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (mListViewScrollListener != null)
+            mListViewScrollListener.onScrollStateChanged(view, scrollState);
     }
 
     @Override
@@ -42,6 +49,8 @@ abstract class AbsListViewScrollDetector implements AbsListView.OnScrollListener
             mLastScrollY = getTopItemScrollY();
             mPreviousFirstVisibleItem = firstVisibleItem;
         }
+        if (mListViewScrollListener != null)
+            mListViewScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
     }
 
     public void setScrollThreshold(int scrollThreshold) {

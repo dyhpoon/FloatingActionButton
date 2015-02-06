@@ -4,6 +4,11 @@ import android.support.v7.widget.RecyclerView;
 
 abstract class RecyclerViewScrollDetector extends RecyclerView.OnScrollListener {
     private int mScrollThreshold;
+    private RecyclerView.OnScrollListener mRecycleViewScrollListener;
+
+    public RecyclerViewScrollDetector(RecyclerView.OnScrollListener l) {
+        mRecycleViewScrollListener = l;
+    }
 
     abstract void onScrollUp();
 
@@ -19,6 +24,8 @@ abstract class RecyclerViewScrollDetector extends RecyclerView.OnScrollListener 
                 onScrollDown();
             }
         }
+        if (mRecycleViewScrollListener != null)
+            mRecycleViewScrollListener.onScrolled(recyclerView, dx, dy);
     }
 
     public void setScrollThreshold(int scrollThreshold) {

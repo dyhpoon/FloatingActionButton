@@ -26,6 +26,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
@@ -334,31 +335,55 @@ public class FloatingActionButton extends ImageButton {
         attachToListView(listView, null);
     }
 
-    public void attachToRecyclerView(@NonNull RecyclerView recyclerView) {
-        attachToRecyclerView(recyclerView, null);
+    public void attachToListView(@NonNull AbsListView listView,
+                                 ScrollDirectionListener listener) {
+        attachToListView(listView, listener, null);
     }
 
-    public void attachToScrollView(@NonNull ObservableScrollView scrollView) {
-        attachToScrollView(scrollView, null);
-    }
-
-    public void attachToListView(@NonNull AbsListView listView, ScrollDirectionListener listener) {
-        AbsListViewScrollDetectorImpl scrollDetector = new AbsListViewScrollDetectorImpl();
+    public void attachToListView(@NonNull AbsListView listView,
+                                 ScrollDirectionListener listener,
+                                 AbsListView.OnScrollListener scrollListener) {
+        AbsListViewScrollDetectorImpl scrollDetector =
+                new AbsListViewScrollDetectorImpl(scrollListener);
         scrollDetector.setListener(listener);
         scrollDetector.setListView(listView);
         scrollDetector.setScrollThreshold(mScrollThreshold);
         listView.setOnScrollListener(scrollDetector);
     }
 
-    public void attachToRecyclerView(@NonNull RecyclerView recyclerView, ScrollDirectionListener listener) {
-        RecyclerViewScrollDetectorImpl scrollDetector = new RecyclerViewScrollDetectorImpl();
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView) {
+        attachToRecyclerView(recyclerView, null);
+    }
+
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView,
+                                     ScrollDirectionListener listener) {
+        attachToRecyclerView(recyclerView, listener, null);
+    }
+
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView,
+                                     ScrollDirectionListener listener,
+                                     RecyclerView.OnScrollListener scrollListener) {
+        RecyclerViewScrollDetectorImpl scrollDetector =
+                new RecyclerViewScrollDetectorImpl(scrollListener);
         scrollDetector.setListener(listener);
         scrollDetector.setScrollThreshold(mScrollThreshold);
         recyclerView.setOnScrollListener(scrollDetector);
     }
 
-    public void attachToScrollView(@NonNull ObservableScrollView scrollView, ScrollDirectionListener listener) {
-        ScrollViewScrollDetectorImpl scrollDetector = new ScrollViewScrollDetectorImpl();
+    public void attachToScrollView(@NonNull ObservableScrollView scrollView) {
+        attachToScrollView(scrollView, null);
+    }
+
+    public void attachToScrollView(@NonNull ObservableScrollView scrollView,
+                                   ScrollDirectionListener listener) {
+        attachToScrollView(scrollView, listener, null);
+    }
+
+    public void attachToScrollView(@NonNull ObservableScrollView scrollView,
+                                   ScrollDirectionListener listener,
+                                   ObservableScrollView.OnScrollChangedListener scrollListener) {
+        ScrollViewScrollDetectorImpl scrollDetector =
+                new ScrollViewScrollDetectorImpl(scrollListener);
         scrollDetector.setListener(listener);
         scrollDetector.setScrollThreshold(mScrollThreshold);
         scrollView.setOnScrollChangedListener(scrollDetector);
@@ -374,6 +399,10 @@ public class FloatingActionButton extends ImageButton {
 
     private class AbsListViewScrollDetectorImpl extends AbsListViewScrollDetector {
         private ScrollDirectionListener mListener;
+
+        public AbsListViewScrollDetectorImpl(AbsListView.OnScrollListener l) {
+            super(l);
+        }
 
         private void setListener(ScrollDirectionListener scrollDirectionListener) {
             mListener = scrollDirectionListener;
@@ -399,6 +428,10 @@ public class FloatingActionButton extends ImageButton {
     private class RecyclerViewScrollDetectorImpl extends RecyclerViewScrollDetector {
         private ScrollDirectionListener mListener;
 
+        public RecyclerViewScrollDetectorImpl(RecyclerView.OnScrollListener l) {
+            super(l);
+        }
+
         private void setListener(ScrollDirectionListener scrollDirectionListener) {
             mListener = scrollDirectionListener;
         }
@@ -422,6 +455,10 @@ public class FloatingActionButton extends ImageButton {
 
     private class ScrollViewScrollDetectorImpl extends ScrollViewScrollDetector {
         private ScrollDirectionListener mListener;
+
+        public ScrollViewScrollDetectorImpl(ObservableScrollView.OnScrollChangedListener l) {
+            super(l);
+        }
 
         private void setListener(ScrollDirectionListener scrollDirectionListener) {
             mListener = scrollDirectionListener;

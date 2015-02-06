@@ -268,7 +268,7 @@ public class FloatingActionsMenu extends ViewGroup {
     }
 
     public void hide() {
-        if (!mExpanded) hide(true);
+        hide(true);
     }
 
     public void show(boolean animate) {
@@ -276,7 +276,8 @@ public class FloatingActionsMenu extends ViewGroup {
     }
 
     public void hide(boolean animate) {
-        bounce(false, animate, false);
+        if (!mExpanded)
+            bounce(false, animate, false);
     }
 
     private void bounce(final boolean visible, final boolean animate, boolean force) {
@@ -428,31 +429,55 @@ public class FloatingActionsMenu extends ViewGroup {
         attachToListView(listView, null);
     }
 
-    public void attachToRecyclerView(@NonNull RecyclerView recyclerView) {
-        attachToRecyclerView(recyclerView, null);
+    public void attachToListView(@NonNull AbsListView listView,
+                                 ScrollDirectionListener listener) {
+        attachToListView(listView, listener, null);
     }
 
-    public void attachToScrollView(@NonNull ObservableScrollView scrollView) {
-        attachToScrollView(scrollView, null);
-    }
-
-    public void attachToListView(@NonNull AbsListView listView, ScrollDirectionListener listener) {
-        AbsListViewScrollDetectorImpl scrollDetector = new AbsListViewScrollDetectorImpl();
+    public void attachToListView(@NonNull AbsListView listView,
+                                 ScrollDirectionListener listener,
+                                 AbsListView.OnScrollListener scrollListener) {
+        AbsListViewScrollDetectorImpl scrollDetector =
+                new AbsListViewScrollDetectorImpl(scrollListener);
         scrollDetector.setListener(listener);
         scrollDetector.setListView(listView);
         scrollDetector.setScrollThreshold(mScrollThreshold);
         listView.setOnScrollListener(scrollDetector);
     }
 
-    public void attachToRecyclerView(@NonNull RecyclerView recyclerView, ScrollDirectionListener listener) {
-        RecyclerViewScrollDetectorImpl scrollDetector = new RecyclerViewScrollDetectorImpl();
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView) {
+        attachToRecyclerView(recyclerView, null);
+    }
+
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView,
+                                     ScrollDirectionListener listener) {
+        attachToRecyclerView(recyclerView, listener, null);
+    }
+
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView,
+                                     ScrollDirectionListener listener,
+                                     RecyclerView.OnScrollListener scrollListener) {
+        RecyclerViewScrollDetectorImpl scrollDetector =
+                new RecyclerViewScrollDetectorImpl(scrollListener);
         scrollDetector.setListener(listener);
         scrollDetector.setScrollThreshold(mScrollThreshold);
         recyclerView.setOnScrollListener(scrollDetector);
     }
 
-    public void attachToScrollView(@NonNull ObservableScrollView scrollView, ScrollDirectionListener listener) {
-        ScrollViewScrollDetectorImpl scrollDetector = new ScrollViewScrollDetectorImpl();
+    public void attachToScrollView(@NonNull ObservableScrollView scrollView) {
+        attachToScrollView(scrollView, null);
+    }
+
+    public void attachToScrollView(@NonNull ObservableScrollView scrollView,
+                                   ScrollDirectionListener listener) {
+        attachToScrollView(scrollView, listener, null);
+    }
+
+    public void attachToScrollView(@NonNull ObservableScrollView scrollView,
+                                   ScrollDirectionListener listener,
+                                   ObservableScrollView.OnScrollChangedListener scrollListener) {
+        ScrollViewScrollDetectorImpl scrollDetector =
+                new ScrollViewScrollDetectorImpl(scrollListener);
         scrollDetector.setListener(listener);
         scrollDetector.setScrollThreshold(mScrollThreshold);
         scrollView.setOnScrollChangedListener(scrollDetector);
@@ -460,6 +485,10 @@ public class FloatingActionsMenu extends ViewGroup {
 
     private class AbsListViewScrollDetectorImpl extends AbsListViewScrollDetector {
         private ScrollDirectionListener mListener;
+
+        public AbsListViewScrollDetectorImpl(AbsListView.OnScrollListener l) {
+            super(l);
+        }
 
         private void setListener(ScrollDirectionListener scrollDirectionListener) {
             mListener = scrollDirectionListener;
@@ -485,6 +514,10 @@ public class FloatingActionsMenu extends ViewGroup {
     private class RecyclerViewScrollDetectorImpl extends RecyclerViewScrollDetector {
         private ScrollDirectionListener mListener;
 
+        public RecyclerViewScrollDetectorImpl(RecyclerView.OnScrollListener l) {
+            super(l);
+        }
+
         private void setListener(ScrollDirectionListener scrollDirectionListener) {
             mListener = scrollDirectionListener;
         }
@@ -508,6 +541,10 @@ public class FloatingActionsMenu extends ViewGroup {
 
     private class ScrollViewScrollDetectorImpl extends ScrollViewScrollDetector {
         private ScrollDirectionListener mListener;
+
+        public ScrollViewScrollDetectorImpl(ObservableScrollView.OnScrollChangedListener l) {
+            super(l);
+        }
 
         private void setListener(ScrollDirectionListener scrollDirectionListener) {
             mListener = scrollDirectionListener;

@@ -5,6 +5,11 @@ import android.widget.ScrollView;
 abstract class ScrollViewScrollDetector implements ObservableScrollView.OnScrollChangedListener {
     private int mLastScrollY;
     private int mScrollThreshold;
+    private ObservableScrollView.OnScrollChangedListener mScrollViewChangedListener;
+
+    public ScrollViewScrollDetector(ObservableScrollView.OnScrollChangedListener l) {
+        mScrollViewChangedListener = l;
+    }
 
     abstract void onScrollUp();
 
@@ -21,6 +26,8 @@ abstract class ScrollViewScrollDetector implements ObservableScrollView.OnScroll
             }
         }
         mLastScrollY = t;
+        if (mScrollViewChangedListener != null)
+            mScrollViewChangedListener.onScrollChanged(who, l, t, oldl, oldt);
     }
 
     public void setScrollThreshold(int scrollThreshold) {
