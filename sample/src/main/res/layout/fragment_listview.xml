@@ -28,6 +28,13 @@
             fab:fab_colorNormal="@color/accent"
             fab:fab_colorPressed="@color/accent_pressed"/>
 
+        <com.dyhpoon.fab.FloatingActionButton
+            android:id="@+id/action_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/accent"
+            fab:fab_colorPressed="@color/accent_pressed"/>
+
     </com.dyhpoon.fab.FloatingActionsMenu>
 
 </FrameLayout>

@@ -114,7 +114,7 @@ public class FloatingActionsMenu extends ViewGroup {
             height = adjustForOvershoot(height);
         }
 
-        height += mButtonSpacing * (getChildCount() - 1);
+        height += mButtonSpacing * getChildCount();
         width += mMaxButtonWidth + (mShadowOffset * 2);
 
         setMeasuredDimension(width, height);
