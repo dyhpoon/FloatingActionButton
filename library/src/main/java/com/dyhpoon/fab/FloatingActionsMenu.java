@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
@@ -33,6 +34,7 @@ public class FloatingActionsMenu extends ViewGroup {
     private static final int ANIMATION_DURATION_TOGGLE = 300;
     private static final int ANIMATION_DURATION_BOUNCE = 200;
 
+    private Drawable mMenuIcon;
     private int mMenuButtonColorNormal;
     private int mMenuButtonColorPressed;
     private int mMenuButtonColorRipple;
@@ -85,8 +87,9 @@ public class FloatingActionsMenu extends ViewGroup {
                 + mShadowOffset;
 
         TypedArray attr = context.obtainStyledAttributes(attributeSet, R.styleable.FloatingActionsMenu, 0, 0);
-        mMenuButtonColorNormal = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorPressed, getColor(android.R.color.holo_blue_dark));
-        mMenuButtonColorPressed = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorNormal, getColor(android.R.color.holo_blue_light));
+        mMenuIcon = attr.getDrawable(R.styleable.FloatingActionsMenu_fab_menuButtonSrc);
+        mMenuButtonColorNormal = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorNormal, getColor(android.R.color.holo_blue_light));
+        mMenuButtonColorPressed = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorPressed, getColor(android.R.color.holo_blue_dark));
         mMenuButtonColorRipple = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorRipple, getColor(android.R.color.holo_blue_bright));
         mExpandDirection = attr.getInt(R.styleable.FloatingActionsMenu_fab_expandDirection, EXPAND_UP);
         attr.recycle();
@@ -329,6 +332,7 @@ public class FloatingActionsMenu extends ViewGroup {
                 mColorPressed = mMenuButtonColorPressed;
                 mColorRipple = mMenuButtonColorRipple;
                 super.updateBackground();
+                super.setImageDrawable(mMenuIcon);
             }
         };
 
