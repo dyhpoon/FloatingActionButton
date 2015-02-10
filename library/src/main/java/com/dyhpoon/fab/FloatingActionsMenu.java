@@ -37,6 +37,7 @@ public class FloatingActionsMenu extends ViewGroup {
     private Drawable mMenuSelectedIcon;
     private Drawable mMenuUnSelectedIcon;
     private int mMenuButtonColorNormal;
+    private int mMenuButtonColorSelected;
     private int mMenuButtonColorPressed;
     private int mMenuButtonColorRipple;
     private int mExpandDirection;
@@ -91,6 +92,7 @@ public class FloatingActionsMenu extends ViewGroup {
         mMenuSelectedIcon = attr.getDrawable(R.styleable.FloatingActionsMenu_fab_menuButtonSelectedSrc);
         mMenuUnSelectedIcon = attr.getDrawable(R.styleable.FloatingActionsMenu_fab_menuButtonUnSelectedSrc);
         mMenuButtonColorNormal = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorNormal, getColor(android.R.color.holo_blue_light));
+        mMenuButtonColorSelected = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorSelected, getColor(android.R.color.holo_blue_light));
         mMenuButtonColorPressed = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorPressed, getColor(android.R.color.holo_blue_dark));
         mMenuButtonColorRipple = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorRipple, getColor(android.R.color.holo_blue_bright));
         mExpandDirection = attr.getInt(R.styleable.FloatingActionsMenu_fab_expandDirection, EXPAND_UP);
@@ -246,6 +248,7 @@ public class FloatingActionsMenu extends ViewGroup {
             mCollapseAnimation.start();
             mExpandAnimation.cancel();
             mMenuButton.setImageDrawable(mMenuUnSelectedIcon);
+            mMenuButton.setBackgroundColor(mMenuButtonColorNormal);
 
             if (mListener != null) {
                 mListener.onMenuCollapsed();
@@ -259,6 +262,7 @@ public class FloatingActionsMenu extends ViewGroup {
             mCollapseAnimation.cancel();
             mExpandAnimation.start();
             mMenuButton.setImageDrawable(mMenuSelectedIcon);
+            mMenuButton.setBackgroundColor(mMenuButtonColorSelected);
 
             if (mListener != null) {
                 mListener.onMenuExpanded();

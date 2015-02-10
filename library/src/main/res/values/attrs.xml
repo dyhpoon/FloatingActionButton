@@ -17,6 +17,7 @@
         <attr name="fab_menuButtonUnSelectedSrc" format="reference" />
         <attr name="fab_menuButtonColorPressed" format="color" />
         <attr name="fab_menuButtonColorNormal" format="color" />
+        <attr name="fab_menuButtonColorSelected" format="color" />
         <attr name="fab_menuButtonColorRipple" format="color" />
         <attr name="fab_expandDirection" format="enum">
             <enum name="up" value="0" />

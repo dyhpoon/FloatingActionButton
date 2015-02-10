@@ -19,6 +19,7 @@
         android:layout_gravity="bottom|right"
         fab:fab_menuButtonUnSelectedSrc="@drawable/ic_add_white_24dp"
         fab:fab_menuButtonColorNormal="@color/accent"
+        fab:fab_menuButtonColorSelected="@color/primary_pressed"
         fab:fab_menuButtonColorPressed="@color/accent_pressed"
         fab:fab_expandDirection="up">
 
