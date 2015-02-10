@@ -13,7 +13,8 @@
     </declare-styleable>
 
     <declare-styleable name="FloatingActionsMenu" parent="FloatingActionButton">
-        <attr name="fab_menuButtonSrc" format="reference" />
+        <attr name="fab_menuButtonSelectedSrc" format="reference" />
+        <attr name="fab_menuButtonUnSelectedSrc" format="reference" />
         <attr name="fab_menuButtonColorPressed" format="color" />
         <attr name="fab_menuButtonColorNormal" format="color" />
         <attr name="fab_menuButtonColorRipple" format="color" />

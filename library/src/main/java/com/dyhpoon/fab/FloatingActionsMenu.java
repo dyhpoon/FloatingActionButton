@@ -34,7 +34,8 @@ public class FloatingActionsMenu extends ViewGroup {
     private static final int ANIMATION_DURATION_TOGGLE = 300;
     private static final int ANIMATION_DURATION_BOUNCE = 200;
 
-    private Drawable mMenuIcon;
+    private Drawable mMenuSelectedIcon;
+    private Drawable mMenuUnSelectedIcon;
     private int mMenuButtonColorNormal;
     private int mMenuButtonColorPressed;
     private int mMenuButtonColorRipple;
@@ -87,7 +88,8 @@ public class FloatingActionsMenu extends ViewGroup {
                 + mShadowOffset;
 
         TypedArray attr = context.obtainStyledAttributes(attributeSet, R.styleable.FloatingActionsMenu, 0, 0);
-        mMenuIcon = attr.getDrawable(R.styleable.FloatingActionsMenu_fab_menuButtonSrc);
+        mMenuSelectedIcon = attr.getDrawable(R.styleable.FloatingActionsMenu_fab_menuButtonSelectedSrc);
+        mMenuUnSelectedIcon = attr.getDrawable(R.styleable.FloatingActionsMenu_fab_menuButtonUnSelectedSrc);
         mMenuButtonColorNormal = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorNormal, getColor(android.R.color.holo_blue_light));
         mMenuButtonColorPressed = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorPressed, getColor(android.R.color.holo_blue_dark));
         mMenuButtonColorRipple = attr.getColor(R.styleable.FloatingActionsMenu_fab_menuButtonColorRipple, getColor(android.R.color.holo_blue_bright));
@@ -226,18 +228,6 @@ public class FloatingActionsMenu extends ViewGroup {
         return super.checkLayoutParams(p);
     }
 
-    public void collapse() {
-        if (mExpanded) {
-            mExpanded = false;
-            mCollapseAnimation.start();
-            mExpandAnimation.cancel();
-
-            if (mListener != null) {
-                mListener.onMenuCollapsed();
-            }
-        }
-    }
-
     public boolean isExpanded() {
         return mExpanded;
     }
@@ -250,11 +240,25 @@ public class FloatingActionsMenu extends ViewGroup {
         }
     }
 
+    public void collapse() {
+        if (mExpanded) {
+            mExpanded = false;
+            mCollapseAnimation.start();
+            mExpandAnimation.cancel();
+            mMenuButton.setImageDrawable(mMenuUnSelectedIcon);
+
+            if (mListener != null) {
+                mListener.onMenuCollapsed();
+            }
+        }
+    }
+
     public void expand() {
         if (!mExpanded) {
             mExpanded = true;
             mCollapseAnimation.cancel();
             mExpandAnimation.start();
+            mMenuButton.setImageDrawable(mMenuSelectedIcon);
 
             if (mListener != null) {
                 mListener.onMenuExpanded();
@@ -332,7 +336,7 @@ public class FloatingActionsMenu extends ViewGroup {
                 mColorPressed = mMenuButtonColorPressed;
                 mColorRipple = mMenuButtonColorRipple;
                 super.updateBackground();
-                super.setImageDrawable(mMenuIcon);
+                super.setImageDrawable(mExpanded ? mMenuSelectedIcon : mMenuUnSelectedIcon);
             }
         };
 
