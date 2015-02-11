@@ -234,6 +234,10 @@ public class FloatingActionsMenu extends ViewGroup {
         return mExpanded;
     }
 
+    public void setOnMenuUpdateListener(OnFloatingActionsMenuUpdateListener listener) {
+        mListener = listener;
+    }
+
     public void toggle() {
         if (mExpanded) {
             collapse();
