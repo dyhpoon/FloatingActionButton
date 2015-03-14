@@ -7,10 +7,6 @@ abstract class ScrollViewScrollDetector implements ObservableScrollView.OnScroll
     private int mScrollThreshold;
     private ObservableScrollView.OnScrollChangedListener mScrollViewChangedListener;
 
-    public ScrollViewScrollDetector(ObservableScrollView.OnScrollChangedListener l) {
-        mScrollViewChangedListener = l;
-    }
-
     abstract void onScrollUp();
 
     abstract void onScrollDown();

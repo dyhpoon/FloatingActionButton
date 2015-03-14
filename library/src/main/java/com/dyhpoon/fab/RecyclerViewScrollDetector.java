@@ -6,10 +6,6 @@ abstract class RecyclerViewScrollDetector extends RecyclerView.OnScrollListener 
     private int mScrollThreshold;
     private RecyclerView.OnScrollListener mRecycleViewScrollListener;
 
-    public RecyclerViewScrollDetector(RecyclerView.OnScrollListener l) {
-        mRecycleViewScrollListener = l;
-    }
-
     abstract void onScrollUp();
 
     abstract void onScrollDown();

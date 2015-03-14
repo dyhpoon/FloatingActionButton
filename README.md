@@ -19,7 +19,7 @@ Android [floating action button] which reacts on scrolling events. Becomes visib
 
 ```groovy
 dependencies {
-    compile 'com.melnykov:floatingactionbutton:1.1.0'
+    compile 'com.melnykov:floatingactionbutton:1.2.0'
 }
 ```
 
@@ -117,6 +117,11 @@ Check the sample project to see how to use custom listeners if you need to track
 
 ### Changelog
 
+**Version 1.2.0**
++ Respect an elevation set manually for the FAB;
++ Don't emit a scroll when the listview is empty;
++ Add an ability to attach normal listeners for scroll operations (thanks to [Bill Donahue](https://github.com/bdonahue)).
+
 **Version 1.1.0:**
 + Do not ignore negative margins on pre-Lollipop;
 + Disable clicks on the FAB when it's hidden on pre-Honeycomb;
@@ -179,6 +184,15 @@ Icon | Application
 <img src="https://lh6.ggpht.com/HmBZeeZFeZ5m0AoYOK5Y2H1k8eqwa860ySNhJ_wF1AHAJlu9lxcAt8e2d8C8RWakjRY=w300-rw" width="48" height="48" /> | [Date Night]
 <img src="https://lh6.ggpht.com/3swb0k5GzAiZADacoSH14JUkWij9lj_Q78VjDEkwYRSmTY7NWV9artEoSr0Jt6Ew5gsX=w300-rw" width="48" height="48" /> | [Jair Player The Music Rainbow]
 <img src="https://lh4.ggpht.com/0VAjMOZobMCMXeyynn1qUh3rOdHjIriqtNPRC7Vkm1pUKAPtIJy1ma5Y3xmGYxWwmkA=w300-rw" width="48" height="48" /> | [Taskr - Lista de Tareas]
+<img src="https://lh4.ggpht.com/GC2GNlCoxHzFaE3SUFTMgKfUaMN32iOrEN8NqSUnQUNlIAMceaKyuYVNNo0j_k37LkM=w300-rw" width="48" height="48" /> | [Festivos: ¡Conoce el mundo!]
+<img src="https://lh6.ggpht.com/SE4n_W1LSRHucyRLHyXwM76XlLZAsUr4awEokmQyWkCTscZJiu8rJuE1ygWp2m0zKA=w300-rw" width="48" height="48" /> | [nowPaper]
+<img src="https://lh5.ggpht.com/i6rmn-yiLY97cP9X8URrbZghNEzaVRO3Un_z7vd6PGME88ViCo99g4lKas48XzNqgw=w300-rw" width="48" height="48" /> | [Vicious chain - Don't do that!]
+<img src="https://lh5.ggpht.com/ehV6oywWQw4FkXMNL8SPWCUd73oywlHJt-3b4uOI4YkH2mJgQIQADE-2Js3yupkZUUs=w300-rw" width="48" height="48" /> | [My Football Stats]
+<img src="https://lh6.ggpht.com/qFqsjsT_olw1EHU34pdZO2sYGqyPZ-2Zney-qxs7mQovP5nPXKQrk56ygQh7QF9Shvk=w300-rw" width="48" height="48" /> | [The ScoreBoard]
+<img src="https://lh3.ggpht.com/T19LngArl__MPoTa6Q4R6mstrtHBwte_iElYbIUbZ2kkinTw53Qfhcjrqb9bggsPvpk=w300-rw" width="48" height="48" /> | [NavPoint]
+<img src="https://lh5.ggpht.com/1-XPVeLHC3Re-IIzwQGpl4I1942YUyGoetCk5ex4VteAyKVqPanWw1N1BrvSpgrNEw=w300-rw" width="48" height="48" /> | [Just Reminder]
+<img src="https://lh6.ggpht.com/vwho8dbo-Pt5zTzVN6dPlu8Ckd7YUlnLb_0H-pX3jJUPpXCIJVJ9OBtFIovPh5WWN3qO=w300-rw" width="48" height="48" /> | [Early Notes]
+<img src="https://lh4.ggpht.com/aq2DO3JI3TJNuwGQq5tsNU5REfuuFRHpLep_GYYq9wyo7kv650dRNqfPoi5H3Z7d4g=w300-rw" width="48" height="48" /> | [Ranch - Smart Tip Calculator]
 
 ### Links
 
@@ -226,3 +240,12 @@ SOFTWARE.
 [Date Night]:https://play.google.com/store/apps/details?id=com.sababado.datenight
 [Jair Player The Music Rainbow]:https://play.google.com/store/apps/details?id=aj.jair.music
 [Taskr - Lista de Tareas]:https://play.google.com/store/apps/details?id=es.udc.gestortareas
+[Festivos: ¡Conoce el mundo!]:https://play.google.com/store/apps/details?id=com.logicapps.holidays
+[nowPaper]:https://play.google.com/store/apps/details?id=com.dunrite.now
+[Vicious chain - Don't do that!]:https://play.google.com/store/apps/details?id=com.magratheadesign.viciouschain
+[My Football Stats]:https://play.google.com/store/apps/details?id=com.nicorz.futbol5
+[The ScoreBoard]:https://play.google.com/store/apps/details?id=it.pagano.sp
+[NavPoint]:https://play.google.com/store/apps/details?id=com.abi_khalil.remy.nav_point
+[Just Reminder]:https://play.google.com/store/apps/details?id=com.cray.software.justreminder
+[Early Notes]:https://play.google.com/store/apps/details?id=com.gmail.earlynotesapp.earlynotes
+[Ranch - Smart Tip Calculator]:https://play.google.com/store/apps/details?id=com.andreifedianov.android.ranch

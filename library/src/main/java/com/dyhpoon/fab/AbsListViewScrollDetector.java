@@ -11,10 +11,6 @@ abstract class AbsListViewScrollDetector implements AbsListView.OnScrollListener
     private int mScrollThreshold;
     private AbsListView.OnScrollListener mListViewScrollListener;
 
-    public AbsListViewScrollDetector(AbsListView.OnScrollListener l) {
-        mListViewScrollListener = l;
-    }
-
     abstract void onScrollUp();
 
     abstract void onScrollDown();

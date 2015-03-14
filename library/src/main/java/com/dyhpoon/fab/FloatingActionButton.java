@@ -31,11 +31,6 @@ import android.widget.ScrollView;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
-/**
- * Android Google+ like floating action button which reacts on the attached list view scrolling events.
- *
- * @author Oleksandr Melnykov
- */
 public class FloatingActionButton extends ImageButton {
     private static final int TRANSLATE_DURATION_MILLIS = 200;
 
@@ -51,6 +46,8 @@ public class FloatingActionButton extends ImageButton {
     protected int mColorNormal;
     protected int mColorPressed;
     protected int mColorRipple;
+    protected int mColorDisabled;
+
     private boolean mShadow;
     private int mType;
 
@@ -93,6 +90,7 @@ public class FloatingActionButton extends ImageButton {
         mColorNormal = getColor(R.color.material_blue_500);
         mColorPressed = getColor(R.color.material_blue_600);
         mColorRipple = getColor(android.R.color.white);
+        mColorDisabled = getColor(android.R.color.darker_gray);
         mType = TYPE_NORMAL;
         mShadow = true;
         mScrollThreshold = getResources().getDimensionPixelOffset(R.dimen.fab_scroll_threshold);
@@ -113,6 +111,8 @@ public class FloatingActionButton extends ImageButton {
                         getColor(R.color.material_blue_600));
                 mColorRipple = attr.getColor(R.styleable.FloatingActionButton_fab_colorRipple,
                         getColor(android.R.color.white));
+                mColorDisabled = attr.getColor(R.styleable.FloatingActionButton_fab_colorDisabled,
+                    mColorDisabled);
                 mShadow = attr.getBoolean(R.styleable.FloatingActionButton_fab_shadow, true);
                 mType = attr.getInt(R.styleable.FloatingActionButton_fab_type, TYPE_NORMAL);
             } finally {
@@ -124,6 +124,7 @@ public class FloatingActionButton extends ImageButton {
     protected void updateBackground() {
         StateListDrawable drawable = new StateListDrawable();
         drawable.addState(new int[]{android.R.attr.state_pressed}, createDrawable(mColorPressed));
+        drawable.addState(new int[]{-android.R.attr.state_enabled}, createDrawable(mColorDisabled));
         drawable.addState(new int[]{}, createDrawable(mColorNormal));
         setBackgroundCompat(drawable);
     }
@@ -189,7 +190,8 @@ public class FloatingActionButton extends ImageButton {
             setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
-                    int size = getDimension(mType == TYPE_NORMAL ? R.dimen.fab_size_normal : R.dimen.fab_size_mini);
+                    int size = getDimension(mType == TYPE_NORMAL ? R.dimen.fab_size_normal
+                        : R.dimen.fab_size_mini);
                     outline.setOval(0, 0, size, size);
                 }
             });
@@ -332,59 +334,59 @@ public class FloatingActionButton extends ImageButton {
     }
 
     public void attachToListView(@NonNull AbsListView listView) {
-        attachToListView(listView, null);
+        attachToListView(listView, null, null);
     }
 
     public void attachToListView(@NonNull AbsListView listView,
-                                 ScrollDirectionListener listener) {
-        attachToListView(listView, listener, null);
+                                 ScrollDirectionListener scrollDirectionListener) {
+        attachToListView(listView, scrollDirectionListener, null);
+    }
+
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView) {
+        attachToRecyclerView(recyclerView, null, null);
+    }
+
+    public void attachToRecyclerView(@NonNull RecyclerView recyclerView,
+                                     ScrollDirectionListener scrollDirectionListener) {
+        attachToRecyclerView(recyclerView, scrollDirectionListener, null);
+    }
+
+    public void attachToScrollView(@NonNull ObservableScrollView scrollView) {
+        attachToScrollView(scrollView, null, null);
+    }
+
+    public void attachToScrollView(@NonNull ObservableScrollView scrollView,
+                                   ScrollDirectionListener scrollDirectionListener) {
+        attachToScrollView(scrollView, scrollDirectionListener, null);
     }
 
     public void attachToListView(@NonNull AbsListView listView,
-                                 ScrollDirectionListener listener,
-                                 AbsListView.OnScrollListener scrollListener) {
-        AbsListViewScrollDetectorImpl scrollDetector =
-                new AbsListViewScrollDetectorImpl(scrollListener);
-        scrollDetector.setListener(listener);
+                                 ScrollDirectionListener scrollDirectionListener,
+                                 AbsListView.OnScrollListener onScrollListener) {
+        AbsListViewScrollDetectorImpl scrollDetector = new AbsListViewScrollDetectorImpl();
+        scrollDetector.setScrollDirectionListener(scrollDirectionListener);
+        scrollDetector.setOnScrollListener(onScrollListener);
         scrollDetector.setListView(listView);
         scrollDetector.setScrollThreshold(mScrollThreshold);
         listView.setOnScrollListener(scrollDetector);
     }
 
-    public void attachToRecyclerView(@NonNull RecyclerView recyclerView) {
-        attachToRecyclerView(recyclerView, null);
-    }
-
     public void attachToRecyclerView(@NonNull RecyclerView recyclerView,
-                                     ScrollDirectionListener listener) {
-        attachToRecyclerView(recyclerView, listener, null);
-    }
-
-    public void attachToRecyclerView(@NonNull RecyclerView recyclerView,
-                                     ScrollDirectionListener listener,
-                                     RecyclerView.OnScrollListener scrollListener) {
-        RecyclerViewScrollDetectorImpl scrollDetector =
-                new RecyclerViewScrollDetectorImpl(scrollListener);
-        scrollDetector.setListener(listener);
+                                     ScrollDirectionListener scrollDirectionlistener,
+                                     RecyclerView.OnScrollListener onScrollListener) {
+        RecyclerViewScrollDetectorImpl scrollDetector = new RecyclerViewScrollDetectorImpl();
+        scrollDetector.setScrollDirectionListener(scrollDirectionlistener);
+        scrollDetector.setOnScrollListener(onScrollListener);
         scrollDetector.setScrollThreshold(mScrollThreshold);
         recyclerView.setOnScrollListener(scrollDetector);
     }
 
-    public void attachToScrollView(@NonNull ObservableScrollView scrollView) {
-        attachToScrollView(scrollView, null);
-    }
-
     public void attachToScrollView(@NonNull ObservableScrollView scrollView,
-                                   ScrollDirectionListener listener) {
-        attachToScrollView(scrollView, listener, null);
-    }
-
-    public void attachToScrollView(@NonNull ObservableScrollView scrollView,
-                                   ScrollDirectionListener listener,
-                                   ObservableScrollView.OnScrollChangedListener scrollListener) {
-        ScrollViewScrollDetectorImpl scrollDetector =
-                new ScrollViewScrollDetectorImpl(scrollListener);
-        scrollDetector.setListener(listener);
+                                   ScrollDirectionListener scrollDirectionListener,
+                                   ObservableScrollView.OnScrollChangedListener onScrollChangedListener) {
+        ScrollViewScrollDetectorImpl scrollDetector = new ScrollViewScrollDetectorImpl();
+        scrollDetector.setScrollDirectionListener(scrollDirectionListener);
+        scrollDetector.setOnScrollChangedListener(onScrollChangedListener);
         scrollDetector.setScrollThreshold(mScrollThreshold);
         scrollView.setOnScrollChangedListener(scrollDetector);
     }
@@ -398,86 +400,136 @@ public class FloatingActionButton extends ImageButton {
     }
 
     private class AbsListViewScrollDetectorImpl extends AbsListViewScrollDetector {
-        private ScrollDirectionListener mListener;
+        private ScrollDirectionListener mScrollDirectionListener;
+        private AbsListView.OnScrollListener mOnScrollListener;
 
-        public AbsListViewScrollDetectorImpl(AbsListView.OnScrollListener l) {
-            super(l);
+        private void setScrollDirectionListener(ScrollDirectionListener scrollDirectionListener) {
+            mScrollDirectionListener = scrollDirectionListener;
         }
 
-        private void setListener(ScrollDirectionListener scrollDirectionListener) {
-            mListener = scrollDirectionListener;
+        public void setOnScrollListener(AbsListView.OnScrollListener onScrollListener) {
+            mOnScrollListener = onScrollListener;
         }
 
         @Override
         public void onScrollDown() {
             show();
-            if (mListener != null) {
-                mListener.onScrollDown();
+            if (mScrollDirectionListener != null) {
+                mScrollDirectionListener.onScrollDown();
             }
         }
 
         @Override
         public void onScrollUp() {
             hide();
-            if (mListener != null) {
-                mListener.onScrollUp();
+            if (mScrollDirectionListener != null) {
+                mScrollDirectionListener.onScrollUp();
             }
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                             int totalItemCount) {
+            if (mOnScrollListener != null) {
+                mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+            }
+
+            super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            if (mOnScrollListener != null) {
+                mOnScrollListener.onScrollStateChanged(view, scrollState);
+            }
+
+            super.onScrollStateChanged(view, scrollState);
         }
     }
 
     private class RecyclerViewScrollDetectorImpl extends RecyclerViewScrollDetector {
-        private ScrollDirectionListener mListener;
+        private ScrollDirectionListener mScrollDirectionListener;
+        private RecyclerView.OnScrollListener mOnScrollListener;
 
-        public RecyclerViewScrollDetectorImpl(RecyclerView.OnScrollListener l) {
-            super(l);
+        private void setScrollDirectionListener(ScrollDirectionListener scrollDirectionListener) {
+            mScrollDirectionListener = scrollDirectionListener;
         }
 
-        private void setListener(ScrollDirectionListener scrollDirectionListener) {
-            mListener = scrollDirectionListener;
+        public void setOnScrollListener(RecyclerView.OnScrollListener onScrollListener) {
+            mOnScrollListener = onScrollListener;
         }
 
         @Override
         public void onScrollDown() {
             show();
-            if (mListener != null) {
-                mListener.onScrollDown();
+            if (mScrollDirectionListener != null) {
+                mScrollDirectionListener.onScrollDown();
             }
         }
 
         @Override
         public void onScrollUp() {
             hide();
-            if (mListener != null) {
-                mListener.onScrollUp();
+            if (mScrollDirectionListener != null) {
+                mScrollDirectionListener.onScrollUp();
             }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            if (mOnScrollListener != null) {
+                mOnScrollListener.onScrolled(recyclerView, dx, dy);
+            }
+
+            super.onScrolled(recyclerView, dx, dy);
+        }
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            if (mOnScrollListener != null) {
+                mOnScrollListener.onScrollStateChanged(recyclerView, newState);
+            }
+
+            super.onScrollStateChanged(recyclerView, newState);
         }
     }
 
     private class ScrollViewScrollDetectorImpl extends ScrollViewScrollDetector {
-        private ScrollDirectionListener mListener;
+        private ScrollDirectionListener mScrollDirectionListener;
 
-        public ScrollViewScrollDetectorImpl(ObservableScrollView.OnScrollChangedListener l) {
-            super(l);
+        private ObservableScrollView.OnScrollChangedListener mOnScrollChangedListener;
+
+        private void setScrollDirectionListener(ScrollDirectionListener scrollDirectionListener) {
+            mScrollDirectionListener = scrollDirectionListener;
         }
 
-        private void setListener(ScrollDirectionListener scrollDirectionListener) {
-            mListener = scrollDirectionListener;
+        public void setOnScrollChangedListener(ObservableScrollView.OnScrollChangedListener onScrollChangedListener) {
+            mOnScrollChangedListener = onScrollChangedListener;
         }
 
         @Override
         public void onScrollDown() {
             show();
-            if (mListener != null) {
-                mListener.onScrollDown();
+            if (mScrollDirectionListener != null) {
+                mScrollDirectionListener.onScrollDown();
             }
         }
 
         @Override
         public void onScrollUp() {
             hide();
-            if (mListener != null) {
-                mListener.onScrollUp();
+            if (mScrollDirectionListener != null) {
+                mScrollDirectionListener.onScrollUp();
             }
+        }
+
+        @Override
+        public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
+            if (mOnScrollChangedListener != null) {
+                mOnScrollChangedListener.onScrollChanged(who, l, t, oldl, oldt);
+            }
+
+            super.onScrollChanged(who, l, t, oldl, oldt);
         }
     }
 }
