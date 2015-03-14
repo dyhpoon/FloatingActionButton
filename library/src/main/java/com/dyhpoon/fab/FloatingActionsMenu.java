@@ -241,6 +241,12 @@ public class FloatingActionsMenu extends ViewGroup {
         mListener = listener;
     }
 
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+        super.setOnClickListener(l);
+        mMenuButton.setOnClickListener(l);
+    }
+
     public void toggle() {
         if (mExpanded) {
             collapse();
