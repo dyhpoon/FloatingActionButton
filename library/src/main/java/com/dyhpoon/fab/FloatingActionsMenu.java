@@ -261,7 +261,7 @@ public class FloatingActionsMenu extends ViewGroup {
             mCollapseAnimation.start();
             mExpandAnimation.cancel();
             mMenuButton.setImageDrawable(mMenuUnSelectedIcon);
-            mMenuButton.setBackgroundColor(mMenuButtonColorNormal);
+            mMenuButton.setColorNormal(mMenuButtonColorNormal);
 
             if (mListener != null) {
                 mListener.onMenuCollapsed();
@@ -275,7 +275,7 @@ public class FloatingActionsMenu extends ViewGroup {
             mCollapseAnimation.cancel();
             mExpandAnimation.start();
             mMenuButton.setImageDrawable(mMenuSelectedIcon);
-            mMenuButton.setBackgroundColor(mMenuButtonColorSelected);
+            mMenuButton.setColorNormal(mMenuButtonColorSelected);
 
             if (mListener != null) {
                 mListener.onMenuExpanded();
@@ -346,17 +346,11 @@ public class FloatingActionsMenu extends ViewGroup {
     }
 
     private void createMenuButton(Context context) {
-        mMenuButton = new FloatingActionButton(context) {
-            @Override
-            protected void updateBackground() {
-                mColorNormal = mMenuButtonColorNormal;
-                mColorPressed = mMenuButtonColorPressed;
-                mColorRipple = mMenuButtonColorRipple;
-                mColorDisabled = mMenuButtonColorDisabled;
-                super.updateBackground();
-                super.setImageDrawable(mExpanded ? mMenuSelectedIcon : mMenuUnSelectedIcon);
-            }
-        };
+        mMenuButton = new FloatingActionButton(context);
+        mMenuButton.setImageDrawable(mExpanded ? mMenuSelectedIcon : mMenuUnSelectedIcon);
+        mMenuButton.setColorNormal(mMenuButtonColorNormal);
+        mMenuButton.setColorPressed(mMenuButtonColorPressed);
+        mMenuButton.setColorRipple(mMenuButtonColorRipple);
 
         mMenuButton.setOnClickListener(new OnClickListener() {
             @Override
